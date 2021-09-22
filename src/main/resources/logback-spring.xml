@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty name="prettifyJson" source="logging.json.prettify"/>
+    <springProperty name="timestampFormat" source="logging.json.timestamp-format"/>
+
+    <appender name="json-console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+            <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                <prettyPrint>${prettifyJson}</prettyPrint>
+            </jsonFormatter>
+            <appendLineSeparator>true</appendLineSeparator>
+            <timestampFormat>${timestampFormat}</timestampFormat>
+        </layout>
+    </appender>
+
+    <appender name="json-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+            <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                <prettyPrint>${prettifyJson}</prettyPrint>
+            </jsonFormatter>
+            <appendLineSeparator>true</appendLineSeparator>
+            <timestampFormat>${timestampFormat}</timestampFormat>
+        </layout>
+
+        <file>logs/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/logs-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="json-console" />
+        <appender-ref ref="json-file" />
+    </root>
+</configuration>
