@@ -1,13 +1,12 @@
-package es.thalesalv.kafkstreams;
+package es.thalesalv.streamsconsumer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class KafkstreamsApplicationTests {
+class StreamsConsumerApplicationTests {
 
 	@Test
 	void contextLoads() {
 	}
-
 }

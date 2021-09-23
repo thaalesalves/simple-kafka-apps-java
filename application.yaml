@@ -3,19 +3,21 @@ spring:
   main.banner-mode: off
   profiles.active: local
 
-spring.cloud:
-  stream:
-    bindings:
-      book-input.destination: books
-      author-output.destination: books
-      publisher-output.destination: books
-    kafka.streams:
-      binder:
-        deserializationExceptionHandler: logAndContinue
-        brokers: localhost:9092
-        configuration.schema.registry.url: http://localhost:8081
-      bindings:
-        book-input.consumer.valueSerde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
-        author-output.producer.valueSerde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
-        publisher-output.producer.valueSerde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
-                
+app:
+  kafka:
+    consumer:
+      topics:
+        books: books
+    configuration:
+      bootstrap-servers: localhost:9092
+      schema-registry-url: http://localhost:8081
+      auto-offset: earliest
+      serde:
+        key-class: org.apache.kafka.common.serialization.Serdes.StringSerde
+        value-class: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+
+logging:
+  level.root: INFO
+  json:
+    prettify: true
+    timestamp-format: yyyy-MM-dd' 'HH:mm:ss.SSS
