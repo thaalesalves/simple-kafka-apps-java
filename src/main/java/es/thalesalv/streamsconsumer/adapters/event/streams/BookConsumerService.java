@@ -1,4 +1,4 @@
-package es.thalesalv.streamsconsumer.adapters.event.consumer;
+package es.thalesalv.streamsconsumer.adapters.event.streams;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;

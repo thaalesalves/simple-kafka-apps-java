@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import es.thalesalv.streamsconsumer.adapters.event.consumer.BookConsumerService;
+import es.thalesalv.streamsconsumer.adapters.event.streams.BookConsumerService;
 import es.thalesalv.streamsconsumer.application.service.ExceptionHandlingService;
 import es.thalesalv.streamsconsumer.domain.exception.SystemException;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
