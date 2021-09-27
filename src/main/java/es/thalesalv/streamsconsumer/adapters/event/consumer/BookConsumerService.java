@@ -1,6 +1,8 @@
 package es.thalesalv.streamsconsumer.adapters.event.consumer;
 
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.avro.BookSchema;
@@ -14,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BookConsumerService {
 
+    @Value("${app.kafka.producer.topics.magazines}")
+    private String magazinesTopic;
+
     private final BookService bookService;
 
     public void consumeBookEvent(StreamsBuilder builder, String booksTopic) {
@@ -22,12 +27,13 @@ public class BookConsumerService {
         builder.stream(booksTopic)
             .mapValues((key, value) -> {
                 try {
-                    BookSchema book = (BookSchema) value;
-                    return bookService.execute(book);
+                    return bookService.execute((BookSchema) value);
                 } catch (Exception e) {
                     log.error("Error consuming event", e);
                     throw new SystemException("Error consuming event.", e);
                 }
-            });
+            })
+            .map((key, value) -> new KeyValue<>(key, value))
+            .to(magazinesTopic);
     }
 }

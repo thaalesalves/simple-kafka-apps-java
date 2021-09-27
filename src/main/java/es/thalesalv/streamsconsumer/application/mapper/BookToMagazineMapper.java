@@ -11,6 +11,9 @@ public class BookToMagazineMapper implements EventMapper<BookSchema, MagazineSch
     @Override
     public MagazineSchema map(BookSchema input) {
         return MagazineSchema.newBuilder()
+                .setPublisher(input.getPublisher())
+                .setIssue("01-2021")
+                .setTitle("A Revistinha da Cidade")
                 .build();
     }
 }

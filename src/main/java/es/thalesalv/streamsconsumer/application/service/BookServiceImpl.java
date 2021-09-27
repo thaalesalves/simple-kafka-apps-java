@@ -18,7 +18,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public MagazineSchema execute(BookSchema book) {
         MagazineSchema magazine = bookMagazineMapper.map(book);
-        producerService.produce(magazine);
+        // producerService.produce(magazine);
         return magazine;
     }
 }
