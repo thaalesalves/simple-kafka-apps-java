@@ -5,10 +5,15 @@ spring:
 
 app:
   kafka:
+    producer:
+      topics.magazines: magazines
+      bootstrap-servers: localhost:9092
+      schema-registry-url: http://localhost:8081
+      serde:
+        key-class: org.apache.kafka.common.serialization.StringSerializer
+        value-class: io.confluent.kafka.serializers.KafkaAvroSerializer
     consumer:
-      topics:
-        books: books
-    configuration:
+      topics.books: books
       bootstrap-servers: localhost:9092
       schema-registry-url: http://localhost:8081
       auto-offset: earliest

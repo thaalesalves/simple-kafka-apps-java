@@ -1,0 +1,16 @@
+package es.thalesalv.streamsconsumer.application.mapper;
+
+import org.springframework.stereotype.Component;
+
+import es.thalesalv.avro.BookSchema;
+import es.thalesalv.avro.MagazineSchema;
+
+@Component
+public class BookToMagazineMapper implements EventMapper<BookSchema, MagazineSchema> {
+
+    @Override
+    public MagazineSchema map(BookSchema input) {
+        return MagazineSchema.newBuilder()
+                .build();
+    }
+}

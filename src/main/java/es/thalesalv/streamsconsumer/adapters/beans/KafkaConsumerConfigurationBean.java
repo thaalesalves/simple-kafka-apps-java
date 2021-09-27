@@ -7,46 +7,47 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import es.thalesalv.streamsconsumer.adapters.event.BookConsumerService;
+import es.thalesalv.streamsconsumer.adapters.event.consumer.BookConsumerService;
 import es.thalesalv.streamsconsumer.application.service.ExceptionHandlingService;
 import es.thalesalv.streamsconsumer.domain.exception.SystemException;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-public class KafkaConfigurationBean {
+@RequiredArgsConstructor
+public class KafkaConsumerConfigurationBean {
 
-    @Value("${app.kafka.configuration.schema-registry-url}")
+    @Value("${app.kafka.consumer.schema-registry-url}")
     private String schemaRegistryUrl;
 
-    @Value("${app.kafka.configuration.serde.value-class}")
+    @Value("${app.kafka.consumer.serde.value-class}")
     private String valueSerdeClass;
 
-    @Value("${app.kafka.configuration.serde.key-class}")
+    @Value("${app.kafka.consumer.serde.key-class}")
     private String keySerdeClass;
 
-    @Value("${app.kafka.configuration.bootstrap-servers}")
+    @Value("${app.kafka.consumer.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${app.kafka.configuration.auto-offset}")
+    @Value("${app.kafka.consumer.auto-offset}")
     private String autoOffset;
 
     @Value("${app.kafka.consumer.topics.books}")
     private String booksTopic;
 
-    @Autowired
-    private ExceptionHandlingService exceptionHandlingService;
+    private final ExceptionHandlingService exceptionHandlingService;
+    private final BookConsumerService bookConsumerService;
 
     @Bean
     public KafkaStreams consumerConfig() {
         try {
-            log.debug("Setting up Kafka configuration");
+            log.debug("Setting up Kafka consumer configuration");
 
             Properties props = new Properties();
             props.put(StreamsConfig.APPLICATION_ID_CONFIG, "poc");
@@ -57,7 +58,7 @@ public class KafkaConfigurationBean {
             props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffset);
 
             StreamsBuilder builder = new StreamsBuilder();
-            BookConsumerService.consumeBookEvent(builder, booksTopic);
+            bookConsumerService.consumeBookEvent(builder, booksTopic);
 
             KafkaStreams streams = new KafkaStreams(builder.build(), props);
             streams.setUncaughtExceptionHandler(exceptionHandlingService);
