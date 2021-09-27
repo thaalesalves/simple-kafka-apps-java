@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import es.thalesalv.avro.BookSchema;
 import es.thalesalv.avro.MagazineSchema;
-import es.thalesalv.streamsconsumer.application.mapper.EventMapper;
+import es.thalesalv.streamsconsumer.adapters.event.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 
 @Component

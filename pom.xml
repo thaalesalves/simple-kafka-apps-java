@@ -123,9 +123,19 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>application.yml</exclude>
+                    <exclude>application.yaml</exclude>
+                    <exclude>application.properties</exclude>
+                </excludes>
             </resource>
             <resource>
                 <directory>${project.basedir}</directory>
+                <excludes>
+                    <exclude>application.yml</exclude>
+                    <exclude>application.yaml</exclude>
+                    <exclude>application.properties</exclude>
+                </excludes>
             </resource>
         </resources>
     </build>

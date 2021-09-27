@@ -5,6 +5,7 @@ spring:
 
 app:
   kafka:
+    required-headers: authentication,correlation-id,source
     producer:
       topics.magazines: magazines
       bootstrap-servers: localhost:9092
@@ -12,7 +13,7 @@ app:
       serde:
         key-class: org.apache.kafka.common.serialization.StringSerializer
         value-class: io.confluent.kafka.serializers.KafkaAvroSerializer
-    consumer:
+    streams:
       topics.books: books
       bootstrap-servers: localhost:9092
       schema-registry-url: http://localhost:8081

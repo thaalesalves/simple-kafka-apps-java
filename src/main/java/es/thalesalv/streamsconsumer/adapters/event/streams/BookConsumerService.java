@@ -27,6 +27,7 @@ public class BookConsumerService {
         builder.stream(booksTopic)
             .mapValues((key, value) -> {
                 try {
+                    log.info("Event consumed -> {}", value);
                     return bookService.execute((BookSchema) value);
                 } catch (Exception e) {
                     log.error("Error consuming event", e);

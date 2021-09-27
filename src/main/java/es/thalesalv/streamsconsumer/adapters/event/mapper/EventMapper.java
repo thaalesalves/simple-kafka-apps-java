@@ -1,4 +1,4 @@
-package es.thalesalv.streamsconsumer.application.mapper;
+package es.thalesalv.streamsconsumer.adapters.event.mapper;
 
 public interface EventMapper<Input, Output> {
 

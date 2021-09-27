@@ -27,7 +27,7 @@ public class ExceptionHandlingService implements StreamsUncaughtExceptionHandler
             log.error("Error serializing message", exception);
         }
 
-        producerService.produce(buildErrorObject(exception.getCause().getClass().getName(), exception.getCause().getMessage(), 500));
+        producerService.produce(buildErrorObject(exception.getCause().getClass().getName(), exception.getCause().getMessage(), 500), "dead-letter");
         return StreamThreadExceptionResponse.REPLACE_THREAD;
     }
 
