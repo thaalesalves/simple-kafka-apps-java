@@ -33,6 +33,6 @@ build/
 .vscode/
 
 ### APPLICATION ###
-thalesalv/avro/
+/src/main/java/es/thalesalv/avro/
 logs/**
 *.log
