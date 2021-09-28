@@ -19,7 +19,7 @@ app:
       schema-registry-url: http://localhost:8081
       auto-offset: earliest
       serde:
-        key-class: org.apache.kafka.common.serialization.Serdes.StringSerde
+        key-class: org.apache.kafka.common.serialization.Serdes$StringSerde
         value-class: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 
 logging:

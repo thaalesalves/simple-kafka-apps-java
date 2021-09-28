@@ -35,7 +35,7 @@ public class ProducerServiceImpl implements ProducerService {
     @Override
     public void produce(SpecificRecord record, String topic) {
         log.debug("Start of event production method");
-        ProducerRecord<String, SpecificRecord> producerRecord = new ProducerRecord<>(magazinesTopic, record);
+        ProducerRecord<String, SpecificRecord> producerRecord = new ProducerRecord<>(topic, record);
         kafkaProducer.send(producerRecord).addCallback(success -> {
             log.info("Event produced successfully -> {}", record);
         }, failure -> {
