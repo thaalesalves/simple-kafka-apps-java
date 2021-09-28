@@ -1,4 +1,4 @@
-# Simple Kafka app
+# Simple Kafka Streams app
 This simple application works with a simple single-node Kafka cluster that runs on Docker. It produces and consumes messages from pre-defined topics with no major data processing using the Kafka Streams API without Spring Cloud Stream.
 
 ## Technologies used
