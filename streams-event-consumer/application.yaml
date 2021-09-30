@@ -1,0 +1,22 @@
+server.port: 9095
+spring:
+  main.banner-mode: off
+  profiles.active: local
+
+app:
+  kafka:
+    required-headers: authentication,correlation-id,source
+    streams:
+      topics.books: books
+      bootstrap-servers: localhost:9092
+      schema-registry-url: http://localhost:8081
+      auto-offset: earliest
+      serde:
+        key-class: org.apache.kafka.common.serialization.Serdes$StringSerde
+        value-class: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+
+logging:
+  level.root: INFO
+  json:
+    prettify: true
+    timestamp-format: yyyy-MM-dd' 'HH:mm:ss.SSS

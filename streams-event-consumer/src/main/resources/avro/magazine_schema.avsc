@@ -1,0 +1,39 @@
+{
+    "type": "record",
+    "name": "MagazineSchema",
+    "namespace": "es.thalesalv.avro",
+    "doc": "This schema represents a magazine",
+    "fields": [
+        {
+            "name": "title",
+            "type": "string"
+        },
+        {
+            "name": "issue",
+            "type": "string"
+        },
+        {
+            "name": "publisher",
+            "type": {
+                "type": "record",
+                "name": "PublisherSchema",
+                "namespace": "es.thalesalv.avro",
+                "doc": "This schema represents a book publisher",
+                "fields": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "country",
+                        "type": "string"
+                    },
+                    {
+                        "name": "address",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

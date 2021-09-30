@@ -1,0 +1,20 @@
+{
+    "type": "record",
+    "name": "ErrorSchema",
+    "namespace": "es.thalesalv.avro",
+    "doc": "This schema represents an error",
+    "fields": [
+        {
+            "name": "errorMessage",
+            "type": "string"
+        },
+        {
+            "name": "errorName",
+            "type": "string"
+        },
+        {
+            "name": "statusCode",
+            "type": "int"
+        }
+    ]
+}
