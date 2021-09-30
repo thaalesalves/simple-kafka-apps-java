@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BooksTopicListener {
     
-    @Value("${app.kafka.producer.topics.magazines}")
+    @Value("${app.kafka.streams.topics.output.magazines}")
     private String magazinesTopic;
 
     private final BookService bookService;

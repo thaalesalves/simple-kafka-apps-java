@@ -4,21 +4,17 @@ import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.Consumed;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import es.thalesalv.avro.BookSchema;
 import es.thalesalv.streamsconprod.adapters.event.streams.BooksTopicListener;
 import es.thalesalv.streamsconprod.application.service.ExceptionHandlingService;
 import es.thalesalv.streamsconprod.domain.exception.SystemException;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +38,7 @@ public class KafkaStreamsConfigurationBean {
     @Value("${app.kafka.streams.auto-offset}")
     private String autoOffset;
 
-    @Value("${app.kafka.streams.topics.books}")
+    @Value("${app.kafka.streams.topics.input.books}")
     private String booksTopic;
 
     private final BooksTopicListener bookConsumerService;

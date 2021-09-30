@@ -3,6 +3,7 @@ package es.thalesalv.streamsconprod.application.service;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.streams.errors.StreamsException;
 import org.apache.kafka.streams.errors.StreamsUncaughtExceptionHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.avro.ErrorSchema;
@@ -14,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class ExceptionHandlingService implements StreamsUncaughtExceptionHandler {
+
+    @Value("${app.kafka.producer.topics.dead-letter")
+    private String deadletterTopic;
 
     private final ProducerService producerService;
 
@@ -27,7 +31,7 @@ public class ExceptionHandlingService implements StreamsUncaughtExceptionHandler
             log.error("Error serializing message", exception);
         }
 
-        producerService.produce(buildErrorObject(exception.getCause().getClass().getName(), exception.getCause().getMessage(), 500), "dead-letter");
+        producerService.produce(buildErrorObject(exception.getCause().getClass().getName(), exception.getCause().getMessage(), 500), deadletterTopic);
         return StreamThreadExceptionResponse.REPLACE_THREAD;
     }
 
