@@ -1,0 +1,18 @@
+server.port: 9091
+spring:
+  main.banner-mode: off
+  profiles.active: local
+
+logging:
+  level:
+    root: info
+
+spring.kafka:
+  bootstrap-servers:
+  - localhost:9092
+  properties:
+    "[auto.register.schemas]": false
+    "[schema.registry.url]": http://localhost:8081
+  producer:
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer

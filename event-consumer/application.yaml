@@ -1,0 +1,26 @@
+server.port: 9090
+spring:
+  main.banner-mode: off
+  profiles.active: local
+
+app.config.messaging.consumer.topic: books-topic
+
+logging:
+  level:
+    root: info
+
+spring.kafka:
+  bootstrap-servers:
+  - localhost:9092
+  properties:
+    auto.create.topics.enable: false
+    auto.register.schemas: false
+    value.subject.name.strategy: io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
+    schema.registry.url: http://localhost:8081
+  consumer:
+    properties.specific.avro.reader: true
+    group-id: basic-consumer
+    auto-offset-reset: earliest
+    enable-auto-commit: false
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
