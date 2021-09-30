@@ -11,7 +11,7 @@
     <groupId>es.thalesalv</groupId>
     <artifactId>streamsconprod</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kafka-streams-conprod</name>
+    <name>streams-conprod</name>
     <description>Demo project for a Kafka Streams application</description>
 
     <properties>

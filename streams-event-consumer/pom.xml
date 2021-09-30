@@ -11,8 +11,8 @@
 	<groupId>es.thalesalv</groupId>
 	<artifactId>streamsconsumer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>streams-event-consumer</name>
-	<description>Demo project for a Kafka Streams application</description>
+	<name>streams-consumer</name>
+	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -31,7 +31,6 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -176,4 +175,5 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
+
 </project>
