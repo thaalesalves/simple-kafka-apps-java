@@ -9,14 +9,15 @@
     </parent>
 
     <groupId>es.thalesalv</groupId>
-    <artifactId>streamsconsumer</artifactId>
+    <artifactId>streamsconprod</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kafka-streams-consumer</name>
+    <name>kafka-streams-conprod</name>
     <description>Demo project for a Kafka Streams application</description>
 
     <properties>
         <java.version>11</java.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
