@@ -6,9 +6,7 @@ import lombok.Getter;
 public enum EventTypes {
 
     BOOK("books", "es.thalesalv.avro.BookSchema"),
-    PUBLISHER("books", "es.thalesalv.avro.PublisherSchema"),
-    AUTHOR("books", "es.thalesalv.avro.AuthorSchema"),
-    MAGAZINE("books", "es.thalesalv.avro.MagazineSchema");
+    MAGAZINE("magazines", "es.thalesalv.avro.MagazineSchema");
 
     private String topic;
     private String avroClass;
