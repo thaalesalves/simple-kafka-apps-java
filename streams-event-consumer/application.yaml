@@ -1,4 +1,4 @@
-server.port: 9095
+server.port: 9096
 spring:
   main.banner-mode: off
   profiles.active: local
@@ -6,15 +6,9 @@ spring:
 app:
   kafka:
     required-headers: authentication,correlation-id,source
-    producer:
-      topics.magazines: magazines
-      bootstrap-servers: localhost:9092
-      schema-registry-url: http://localhost:8081
-      serde:
-        key-class: org.apache.kafka.common.serialization.StringSerializer
-        value-class: io.confluent.kafka.serializers.KafkaAvroSerializer
     streams:
-      topics.books: books
+      topics:
+        input.magazines: magazines
       bootstrap-servers: localhost:9092
       schema-registry-url: http://localhost:8081
       auto-offset: earliest
@@ -25,5 +19,5 @@ app:
 logging:
   level.root: INFO
   json:
-    prettify: true
+    prettify: false
     timestamp-format: yyyy-MM-dd' 'HH:mm:ss.SSS

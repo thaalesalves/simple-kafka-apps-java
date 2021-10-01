@@ -4,21 +4,17 @@ import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.Consumed;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import es.thalesalv.avro.BookSchema;
-import es.thalesalv.streamsconsumer.adapters.event.streams.BooksTopicListener;
+import es.thalesalv.streamsconsumer.adapters.event.streams.MagazinesTopicListener;
 import es.thalesalv.streamsconsumer.application.service.ExceptionHandlingService;
 import es.thalesalv.streamsconsumer.domain.exception.SystemException;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,10 +38,10 @@ public class KafkaStreamsConfigurationBean {
     @Value("${app.kafka.streams.auto-offset}")
     private String autoOffset;
 
-    @Value("${app.kafka.streams.topics.books}")
-    private String booksTopic;
+    @Value("${app.kafka.streams.topics.input.magazines}")
+    private String magazinesTopic;
 
-    private final BooksTopicListener bookConsumerService;
+    private final MagazinesTopicListener magazinesConsumerService;
     private final ExceptionHandlingService exceptionHandlingService;
 
     @Bean
@@ -63,7 +59,7 @@ public class KafkaStreamsConfigurationBean {
             props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
 
             StreamsBuilder builder = new StreamsBuilder();
-            bookConsumerService.consume(builder.stream(booksTopic));
+            magazinesConsumerService.consume(builder.stream(magazinesTopic));
 
             KafkaStreams streams = new KafkaStreams(builder.build(), props);
             streams.setUncaughtExceptionHandler(exceptionHandlingService);

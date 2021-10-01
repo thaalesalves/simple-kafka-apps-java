@@ -1,7 +1,6 @@
 package es.thalesalv.streamsconsumer.adapters.event.streams;
 
 import org.apache.kafka.streams.kstream.KStream;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.avro.MagazineSchema;
@@ -12,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class BooksTopicListener {
-    
-    @Value("${app.kafka.producer.topics.magazines}")
-    private String magazinesTopic;
+public class MagazinesTopicListener {
 
     public void consume(KStream<String, MagazineSchema> stream) {
 

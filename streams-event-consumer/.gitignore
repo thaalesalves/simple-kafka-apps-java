@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### APPLICATION ###
+/src/main/java/es/thalesalv/avro/
+logs/**
+*.log
