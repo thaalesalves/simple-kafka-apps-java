@@ -1,18 +1,17 @@
 server.port: 9091
 spring:
   main.banner-mode: off
-  profiles.active: local
+  profiles.active: aws
 
-logging:
-  level:
-    root: info
+logging.level.root: info
 
-spring.kafka:
-  bootstrap-servers:
-  - localhost:9092
-  properties:
-    "[auto.register.schemas]": false
-    "[schema.registry.url]": http://localhost:8081
-  producer:
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+app:
+  aws.region: ${AWS_REGION}
+  kafka:
+    schema-registry-name: ${SCHEMA_REGISTRY_NAME}
+    schema-registry-url: ${SCHEMA_REGISTRY_URL}
+    bootstrap-servers: ${BOOTSTRAP_SERVERS}
+    producer:
+      serialization:
+        value-class: ${SERIALIZER_VALUE_CLASS}
+        key-class: ${SERIALIZER_KEY_CLASS}
