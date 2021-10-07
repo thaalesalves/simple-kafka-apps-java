@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @EnableKafka
 @Configuration
 @RequiredArgsConstructor
-public class KafkaConfigBean {
+public class KafkaConfigurationBean {
 
     @Value("${app.kafka.schema-registry-url}")
     private String schemaRegistryUrl;
@@ -35,18 +35,14 @@ public class KafkaConfigBean {
     private String bootstrapServers;
 
     @Bean
-    public ProducerFactory<String, GenericRecord> producerFactory() {
-        Map<String, Object> props = new HashMap<>();
+    public KafkaTemplate<String, GenericRecord> kafkaTemplate() {
+        final Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializerClass);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClass);
         props.put("schema.registry.url", schemaRegistryUrl);
 
-        return new DefaultKafkaProducerFactory<String, GenericRecord>(props);
-    }
-
-    @Bean
-    public KafkaTemplate<String, GenericRecord> kafkaTemplate() {
-        return new KafkaTemplate<String, GenericRecord>(producerFactory());
+        final ProducerFactory<String, GenericRecord> producerFactory = new DefaultKafkaProducerFactory<>(props);
+        return new KafkaTemplate<String, GenericRecord>(producerFactory);
     }
 }

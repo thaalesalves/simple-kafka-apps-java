@@ -23,7 +23,7 @@ import software.amazon.awssdk.services.glue.model.DataFormat;
 @EnableKafka
 @Configuration
 @RequiredArgsConstructor
-public class KafkaMSKConfigBean {
+public class MSKConfigurationBean {
 
     @Value("${app.aws.region}")
     private String awsRegion;
@@ -41,8 +41,8 @@ public class KafkaMSKConfigBean {
     private String bootstrapServers;
 
     @Bean
-    public ProducerFactory<String, GenericRecord> producerFactory() {
-        Map<String, Object> props = new HashMap<>();
+    public KafkaTemplate<String, GenericRecord> kafkaTemplate() {
+        final Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializerClass);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClass);
@@ -50,11 +50,7 @@ public class KafkaMSKConfigBean {
         props.put(AWSSchemaRegistryConstants.AWS_REGION, awsRegion);
         props.put(AWSSchemaRegistryConstants.REGISTRY_NAME, schemaRegistryName);
 
-        return new DefaultKafkaProducerFactory<String, GenericRecord>(props);
-    }
-
-    @Bean
-    public KafkaTemplate<String, GenericRecord> kafkaTemplate() {
-        return new KafkaTemplate<String, GenericRecord>(producerFactory());
+        final ProducerFactory<String, GenericRecord> producerFactory = new DefaultKafkaProducerFactory<>(props);
+        return new KafkaTemplate<String, GenericRecord>(producerFactory);
     }
 }
