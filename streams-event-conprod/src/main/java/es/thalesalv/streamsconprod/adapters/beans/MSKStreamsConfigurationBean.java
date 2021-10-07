@@ -2,6 +2,8 @@ package es.thalesalv.streamsconprod.adapters.beans;
 
 import java.util.Properties;
 
+import com.amazonaws.services.schemaregistry.utils.AWSSchemaRegistryConstants;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.streams.KafkaStreams;
@@ -15,27 +17,30 @@ import org.springframework.context.annotation.Profile;
 import es.thalesalv.streamsconprod.adapters.event.streams.BooksTopicListener;
 import es.thalesalv.streamsconprod.application.service.ExceptionHandlingService;
 import es.thalesalv.streamsconprod.domain.exception.SystemException;
-import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.services.glue.model.DataFormat;
 
 @Slf4j
-@Profile("onprem")
+@Profile("aws")
 @Configuration
 @RequiredArgsConstructor
-public class KafkaStreamsConfigurationBean {
+public class MSKStreamsConfigurationBean {
 
-    @Value("${app.kafka.schema-registry-url}")
-    private String schemaRegistryUrl;
+    @Value("${app.aws.region}")
+    private String awsRegion;
+
+    @Value("${app.kafka.schema-registry-name}")
+    private String schemaRegistryName;
+
+    @Value("${app.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
     @Value("${app.kafka.streams.serde.value-class}")
     private String valueSerdeClass;
 
     @Value("${app.kafka.streams.serde.key-class}")
     private String keySerdeClass;
-
-    @Value("${app.kafka.streams.bootstrap-servers}")
-    private String bootstrapServers;
 
     @Value("${app.kafka.streams.auto-offset}")
     private String autoOffset;
@@ -56,7 +61,9 @@ public class KafkaStreamsConfigurationBean {
             props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             props.put(StreamsConfig.producerPrefix(ProducerConfig.ACKS_CONFIG), "all");
             props.put(StreamsConfig.consumerPrefix(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG), autoOffset);
-            props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+            props.put(AWSSchemaRegistryConstants.DATA_FORMAT, DataFormat.AVRO.name());
+            props.put(AWSSchemaRegistryConstants.AWS_REGION, awsRegion);
+            props.put(AWSSchemaRegistryConstants.REGISTRY_NAME, schemaRegistryName);
 
             StreamsBuilder builder = new StreamsBuilder();
             bookConsumerService.consume(builder.stream(booksTopic));
@@ -72,8 +79,8 @@ public class KafkaStreamsConfigurationBean {
 
             return streams;
         } catch (Exception e) {
-            log.error("Error creating Kafka configuration", e);
-            throw new SystemException("Error creating Kafka configuration", e);
+            log.error("Error creating Kafka Streams configuration", e);
+            throw new SystemException("Error creating Kafka Streams configuration", e);
         }
     }
 }

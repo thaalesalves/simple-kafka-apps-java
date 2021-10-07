@@ -9,6 +9,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -17,65 +18,68 @@ import es.thalesalv.streamsconprod.domain.util.ConfigConstants;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
 import io.confluent.kafka.serializers.subject.TopicRecordNameStrategy;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Profile("onprem")
 @Configuration
+@RequiredArgsConstructor
 public class KafkaProducerConfigurationBean {
 
-    @Value("${app.kafka.producer.schema-registry-url}")
+    @Value("${app.kafka.schema-registry-url}")
     private String schemaRegistryUrl;
 
+    @Value("${app.kafka.streams.bootstrap-servers}")
+    private String bootstrapServers;
+
+    @Value("${app.kafka.streams.auto-offset}")
+    private String autoOffset;
+
+    @Value("${app.kafka.streams.topics.input.books}")
+    private String booksTopic;
+
     @Value("${app.kafka.producer.serde.value-class}")
-    private String valueSerdeClass;
+    private String valueSerializerClass;
 
     @Value("${app.kafka.producer.serde.key-class}")
-    private String keySerdeClass;
-
-    @Value("${app.kafka.producer.bootstrap-servers}")
-    private String bootstrapServers;
+    private String keySerializerClass;
 
     @Bean
     public Map<String, Object> kafkaProducerConfig() {
-        log.debug("Setting up Kafka consumer configuration");
-        Map<String, Object> props = new HashMap<>();
+        final Map<String, Object> props = new HashMap<>();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "poc");
         props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.ACKS_CONFIG, "0");
         props.put(KafkaAvroSerializerConfig.VALUE_SUBJECT_NAME_STRATEGY, TopicRecordNameStrategy.class.getName());
-
-        log.debug("Finished setting up Kafka consumer configuration");
         return props;
     }
 
     @Bean
-    public KafkaTemplate<String, SpecificRecord> parametrizedProducerConfig() {
+    public KafkaTemplate<String, SpecificRecord> avroKafkaTemplate() {
         try {
-            log.debug("Setting up KafkaProducer for parametrized messages");
-            Map<String, Object> props = kafkaProducerConfig();
-            props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerdeClass);
-            props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerdeClass);
+            final Map<String, Object> props = kafkaProducerConfig();
+            props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializerClass);
+            props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClass);
             props.put(ConfigConstants.SCHEMA_REGISTRY_URL, schemaRegistryUrl);
 
-            log.debug("Finished setting up Kafka consumer configuration");
-            DefaultKafkaProducerFactory<String, SpecificRecord> producerFactory = new DefaultKafkaProducerFactory<String, SpecificRecord>(props);
+            final DefaultKafkaProducerFactory<String, SpecificRecord> producerFactory = new DefaultKafkaProducerFactory<>(props);
             return new KafkaTemplate<String, SpecificRecord>(producerFactory);
         } catch (Exception e) {
             log.error("Error creating Kafka configuration for Avro producer", e);
-            throw new SystemException("Error creating Kafka configuration", e);
+            throw new SystemException("Error creating Kafka Producer configuration", e);
         }
     }
 
     @Bean
-    public KafkaTemplate<String, String> stringProducerConfig() {
+    public KafkaTemplate<String, String> stringKafkaTemplate() {
         try {
-            log.debug("Setting up KafkaProducer for string messages");
-            DefaultKafkaProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<String, String>(kafkaProducerConfig());
+            final DefaultKafkaProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(kafkaProducerConfig());
             return new KafkaTemplate<String, String>(producerFactory);
         } catch (Exception e) {
-            log.error("Error creating Kafka configuration", e);
-            throw new SystemException("Error creating Kafka configuration for String producer", e);
+            log.error("Error creating Kafka configuration for String producer", e);
+            throw new SystemException("Error creating Kafka Producer configuration", e);
         }
     }
 }

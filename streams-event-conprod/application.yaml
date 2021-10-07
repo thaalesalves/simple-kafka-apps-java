@@ -1,28 +1,27 @@
 server.port: 9095
 spring:
   main.banner-mode: off
-  profiles.active: local
+  profiles.active: aws
 
 app:
+  aws.region: ${AWS_REGION}
   kafka:
-    required-headers: authentication,correlation-id,source
+    bootstrap-servers: ${BOOTSTRAP_SERVERS}
+    schema-registry-name: ${SCHEMA_REGISTRY_NAME}
+    schema-registry-url: ${SCHEMA_REGISTRY_URL}
     producer:
       topics.dead-letter: dead-letter
-      bootstrap-servers: localhost:9092
-      schema-registry-url: http://localhost:8081
-      serde:
-        key-class: org.apache.kafka.common.serialization.StringSerializer
-        value-class: io.confluent.kafka.serializers.KafkaAvroSerializer
+      serialization:
+        value-class: ${SERIALIZER_VALUE_CLASS}
+        key-class: ${SERIALIZER_KEY_CLASS}
     streams:
       topics:
         input.books: books
         output.magazines: magazines
-      bootstrap-servers: localhost:9092
-      schema-registry-url: http://localhost:8081
       auto-offset: earliest
       serde:
-        key-class: org.apache.kafka.common.serialization.Serdes$StringSerde
-        value-class: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        key-class: ${SERDE_KEY_CLASS}
+        value-class: ${SERDE_VALUE_CLASS}
 
 logging:
   level.root: INFO

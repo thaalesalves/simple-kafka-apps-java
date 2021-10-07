@@ -13,14 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ProducerServiceImpl implements ProducerService {
 
-    private final KafkaTemplate<String, SpecificRecord> kafkaProducer;
+    private final KafkaTemplate<String, SpecificRecord> kafkaTemplate;
 
     @Override
     public void produce(SpecificRecord record, String topic) {
     
         log.debug("Start of event production method");
         ProducerRecord<String, SpecificRecord> producerRecord = new ProducerRecord<>(topic, record);
-        kafkaProducer.send(producerRecord).addCallback(success -> {
+        kafkaTemplate.send(producerRecord).addCallback(success -> {
             log.info("Event produced successfully -> {}", record);
         }, failure -> {
             log.error("Exception caught while producing event -> {}", failure);

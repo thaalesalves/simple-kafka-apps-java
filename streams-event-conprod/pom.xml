@@ -22,6 +22,11 @@
         <dependency>
             <groupId>software.amazon.glue</groupId>
             <artifactId>schema-registry-serde</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.glue</groupId>
+            <artifactId>schema-registry-kafkastreams-serde</artifactId>
             <version>1.1.4</version>
         </dependency>
         <dependency>
