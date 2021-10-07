@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.amazonaws.services.schemaregistry.utils.AWSSchemaRegistryConstants;
 
-import org.apache.avro.specific.SpecificRecord;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -48,7 +48,7 @@ public class MSKProducerConfigurationBean {
     private String valueSerializerClass;
 
     @Bean
-    public KafkaTemplate<String, SpecificRecord> kafkaTemplate() {
+    public KafkaTemplate<String, GenericRecord> kafkaTemplate() {
         try {
             Map<String, Object> props = new HashMap<>();
             props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -58,8 +58,8 @@ public class MSKProducerConfigurationBean {
             props.put(AWSSchemaRegistryConstants.AWS_REGION, awsRegion);
             props.put(AWSSchemaRegistryConstants.REGISTRY_NAME, schemaRegistryName);
 
-            final ProducerFactory<String, SpecificRecord> producerFactory = new DefaultKafkaProducerFactory<>(props);
-            return new KafkaTemplate<String, SpecificRecord>(producerFactory);
+            final ProducerFactory<String, GenericRecord> producerFactory = new DefaultKafkaProducerFactory<>(props);
+            return new KafkaTemplate<String, GenericRecord>(producerFactory);
         } catch (Exception e) {
             log.error("Error creating Kafka Producer configuration", e);
             throw new SystemException("Error creating Kafka Producer configuration", e);

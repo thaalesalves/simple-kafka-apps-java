@@ -3,7 +3,7 @@ package es.thalesalv.streamsconprod.adapters.beans;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avro.specific.SpecificRecord;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.streams.StreamsConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,15 +57,15 @@ public class KafkaProducerConfigurationBean {
     }
 
     @Bean
-    public KafkaTemplate<String, SpecificRecord> avroKafkaTemplate() {
+    public KafkaTemplate<String, GenericRecord> avroKafkaTemplate() {
         try {
             final Map<String, Object> props = kafkaProducerConfig();
             props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializerClass);
             props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClass);
             props.put(ConfigConstants.SCHEMA_REGISTRY_URL, schemaRegistryUrl);
 
-            final DefaultKafkaProducerFactory<String, SpecificRecord> producerFactory = new DefaultKafkaProducerFactory<>(props);
-            return new KafkaTemplate<String, SpecificRecord>(producerFactory);
+            final DefaultKafkaProducerFactory<String, GenericRecord> producerFactory = new DefaultKafkaProducerFactory<>(props);
+            return new KafkaTemplate<String, GenericRecord>(producerFactory);
         } catch (Exception e) {
             log.error("Error creating Kafka configuration for Avro producer", e);
             throw new SystemException("Error creating Kafka Producer configuration", e);
