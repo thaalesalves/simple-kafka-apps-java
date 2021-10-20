@@ -21,3 +21,11 @@ logging:
   json:
     prettify: false
     timestamp-format: yyyy-MM-dd' 'HH:mm:ss.SSS
+
+cloud.aws:
+  region:
+    static: ${AWS_REGION}
+    auto: false
+  credentials:
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_ACCESS_KEY_SECRET}

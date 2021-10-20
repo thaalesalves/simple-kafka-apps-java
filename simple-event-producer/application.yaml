@@ -15,3 +15,11 @@ app:
       serialization:
         value-class: ${SERIALIZER_VALUE_CLASS}
         key-class: ${SERIALIZER_KEY_CLASS}
+
+cloud.aws:
+  region:
+    static: ${AWS_REGION}
+    auto: false
+  credentials:
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_ACCESS_KEY_SECRET}
