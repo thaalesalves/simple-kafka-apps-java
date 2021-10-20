@@ -51,12 +51,14 @@ public class KafkaProducerConfigurationBean {
     public KafkaTemplate<String, GenericRecord> kafkaTemplate() {
         try {
             Map<String, Object> props = new HashMap<>();
+            props.put("auto.register.schemas", false);
             props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializerClass);
             props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClass);
             props.put(AWSSchemaRegistryConstants.DATA_FORMAT, DataFormat.AVRO.name());
             props.put(AWSSchemaRegistryConstants.AWS_REGION, awsRegion);
             props.put(AWSSchemaRegistryConstants.REGISTRY_NAME, schemaRegistryName);
+            props.put(AWSSchemaRegistryConstants.SCHEMA_AUTO_REGISTRATION_SETTING, false);
 
             final ProducerFactory<String, GenericRecord> producerFactory = new DefaultKafkaProducerFactory<>(props);
             return new KafkaTemplate<String, GenericRecord>(producerFactory);
