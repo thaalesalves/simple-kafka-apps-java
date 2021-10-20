@@ -1,14 +1,12 @@
 server.port: 9095
 spring:
   main.banner-mode: off
-  profiles.active: aws
 
 app:
   aws.region: ${AWS_REGION}
   kafka:
     bootstrap-servers: ${BOOTSTRAP_SERVERS}
     schema-registry-name: ${SCHEMA_REGISTRY_NAME}
-    schema-registry-url: ${SCHEMA_REGISTRY_URL}
     producer:
       topics.dead-letter: dead-letter
       serialization:

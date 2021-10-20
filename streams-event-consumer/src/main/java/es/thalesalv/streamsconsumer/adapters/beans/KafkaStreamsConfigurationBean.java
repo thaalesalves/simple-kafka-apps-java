@@ -2,6 +2,8 @@ package es.thalesalv.streamsconsumer.adapters.beans;
 
 import java.util.Properties;
 
+import com.amazonaws.services.schemaregistry.utils.AWSSchemaRegistryConstants;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.streams.KafkaStreams;
@@ -14,17 +16,23 @@ import org.springframework.context.annotation.Configuration;
 import es.thalesalv.streamsconsumer.adapters.event.streams.MagazinesTopicListener;
 import es.thalesalv.streamsconsumer.application.service.ExceptionHandlingService;
 import es.thalesalv.streamsconsumer.domain.exception.SystemException;
-import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.services.glue.model.DataFormat;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class KafkaStreamsConfigurationBean {
 
-    @Value("${app.kafka.streams.schema-registry-url}")
-    private String schemaRegistryUrl;
+    @Value("${app.aws.region}")
+    private String awsRegion;
+
+    @Value("${app.kafka.schema-registry-name}")
+    private String schemaRegistryName;
+
+    @Value("${app.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
     @Value("${app.kafka.streams.serde.value-class}")
     private String valueSerdeClass;
@@ -32,23 +40,18 @@ public class KafkaStreamsConfigurationBean {
     @Value("${app.kafka.streams.serde.key-class}")
     private String keySerdeClass;
 
-    @Value("${app.kafka.streams.bootstrap-servers}")
-    private String bootstrapServers;
-
     @Value("${app.kafka.streams.auto-offset}")
     private String autoOffset;
 
-    @Value("${app.kafka.streams.topics.input.magazines}")
-    private String magazinesTopic;
+    @Value("${app.kafka.streams.topics.input.books}")
+    private String booksTopic;
 
     private final MagazinesTopicListener magazinesConsumerService;
     private final ExceptionHandlingService exceptionHandlingService;
 
     @Bean
-    public KafkaStreams streamsConfig() {
+    public KafkaStreams kafkaStreams() {
         try {
-            log.debug("Setting up Kafka consumer configuration");
-
             Properties props = new Properties();
             props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-consumer-poc");
             props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Class.forName(valueSerdeClass));
@@ -56,10 +59,12 @@ public class KafkaStreamsConfigurationBean {
             props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             props.put(StreamsConfig.producerPrefix(ProducerConfig.ACKS_CONFIG), "all");
             props.put(StreamsConfig.consumerPrefix(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG), autoOffset);
-            props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+            props.put(AWSSchemaRegistryConstants.DATA_FORMAT, DataFormat.AVRO.name());
+            props.put(AWSSchemaRegistryConstants.AWS_REGION, awsRegion);
+            props.put(AWSSchemaRegistryConstants.REGISTRY_NAME, schemaRegistryName);
 
             StreamsBuilder builder = new StreamsBuilder();
-            magazinesConsumerService.consume(builder.stream(magazinesTopic));
+            magazinesConsumerService.consume(builder.stream(booksTopic));
 
             KafkaStreams streams = new KafkaStreams(builder.build(), props);
             streams.setUncaughtExceptionHandler(exceptionHandlingService);
@@ -70,11 +75,10 @@ public class KafkaStreamsConfigurationBean {
                 streams.close();
             }));
 
-            log.debug("Finished setting up Kafka configuration");
             return streams;
         } catch (Exception e) {
-            log.error("Error creating Kafka configuration", e);
-            throw new SystemException("Error creating Kafka configuration", e);
+            log.error("Error creating Kafka Streams configuration", e);
+            throw new SystemException("Error creating Kafka Streams configuration", e);
         }
     }
 }

@@ -1,20 +1,18 @@
 server.port: 9096
 spring:
   main.banner-mode: off
-  profiles.active: local
 
 app:
   kafka:
-    required-headers: authentication,correlation-id,source
+    bootstrap-servers: ${BOOTSTRAP_SERVERS}
+    schema-registry-name: ${SCHEMA_REGISTRY_NAME}
     streams:
       topics:
         input.magazines: magazines
-      bootstrap-servers: localhost:9092
-      schema-registry-url: http://localhost:8081
       auto-offset: earliest
       serde:
-        key-class: org.apache.kafka.common.serialization.Serdes$StringSerde
-        value-class: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        key-class: ${SERDE_KEY_CLASS}
+        value-class: ${SERDE_VALUE_CLASS}
 
 logging:
   level.root: INFO
