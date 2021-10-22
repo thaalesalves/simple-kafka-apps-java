@@ -55,7 +55,7 @@ public class KafkaStreamsConfigurationBean {
     public KafkaStreams kafkaStreams() {
         try {
             Properties props = new Properties();
-            props.put("auto.register.schemas", false);
+            props.put("auto.register.schemas", true);
             props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-conprod-poc");
             props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Class.forName(valueSerdeClass));
             props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Class.forName(keySerdeClass));
@@ -65,7 +65,7 @@ public class KafkaStreamsConfigurationBean {
             props.put(AWSSchemaRegistryConstants.DATA_FORMAT, DataFormat.AVRO.name());
             props.put(AWSSchemaRegistryConstants.AWS_REGION, awsRegion);
             props.put(AWSSchemaRegistryConstants.REGISTRY_NAME, schemaRegistryName);
-            props.put(AWSSchemaRegistryConstants.SCHEMA_AUTO_REGISTRATION_SETTING, false);
+            props.put(AWSSchemaRegistryConstants.SCHEMA_AUTO_REGISTRATION_SETTING, true);
 
             StreamsBuilder builder = new StreamsBuilder();
             bookConsumerService.consume(builder.stream(booksTopic));
